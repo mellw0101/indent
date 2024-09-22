@@ -1,0 +1,5 @@
+inside indent.c on line 449 is the main loop.
+
+./indent ../../src/c/args.c -st -i4 -bli0
+
+lexi is most importent.

@@ -1,0 +1,9 @@
+/.vscode
+/autom4te.cache
+/build
+/config
+/config.h.in
+/m4
+/miscel
+/po
+/regression

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+Amake --build --install --install-bin -y
+clang src/tools/texinfo2man.c -o build/bin/texinfo2man
