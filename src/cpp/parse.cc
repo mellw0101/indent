@@ -8,24 +8,24 @@ parser_state_t *parser_state_tos = NULL;
 extern void
 init_parser(void)
 {
-    parser_state_tos = xmalloc(sizeof(parser_state_t));
+    parser_state_tos = (parser_state_t *)xmalloc(sizeof(parser_state_t));
     /* GDB_HOOK_parser_state_tos */
     parser_state_tos->p_stack_size       = INITIAL_STACK_SIZE;
-    parser_state_tos->p_stack            = xmalloc(INITIAL_STACK_SIZE * sizeof(codes_t));
-    parser_state_tos->il                 = xmalloc(INITIAL_STACK_SIZE * sizeof(int));
-    parser_state_tos->cstk               = xmalloc(INITIAL_STACK_SIZE * sizeof(int));
+    parser_state_tos->p_stack            = (codes_t *)xmalloc(INITIAL_STACK_SIZE * sizeof(codes_t));
+    parser_state_tos->il                 = (int *)xmalloc(INITIAL_STACK_SIZE * sizeof(int));
+    parser_state_tos->cstk               = (int *)xmalloc(INITIAL_STACK_SIZE * sizeof(int));
     parser_state_tos->paren_indents_size = 8;
-    parser_state_tos->paren_indents      = xmalloc(parser_state_tos->paren_indents_size * sizeof(short));
+    parser_state_tos->paren_indents      = (short *)xmalloc(parser_state_tos->paren_indents_size * sizeof(short));
     /* Although these are supposed to grow if we reach the end,
      * I can find no place in the code which does this. */
-    combuf        = xmalloc(INITIAL_BUFFER_SIZE);
-    labbuf        = xmalloc(INITIAL_BUFFER_SIZE);
-    codebuf       = xmalloc(INITIAL_BUFFER_SIZE);
+    combuf        = (char *)xmalloc(INITIAL_BUFFER_SIZE);
+    labbuf        = (char *)xmalloc(INITIAL_BUFFER_SIZE);
+    codebuf       = (char *)xmalloc(INITIAL_BUFFER_SIZE);
     save_com.size = INITIAL_BUFFER_SIZE;
-    save_com.end = save_com.ptr = xmalloc(save_com.size);
+    save_com.end = save_com.ptr = (char *)xmalloc(save_com.size);
     save_com.len = save_com.column = 0;
     di_stack_alloc                 = 2;
-    di_stack                       = xmalloc(di_stack_alloc * sizeof(*di_stack));
+    di_stack                       = (int *)xmalloc(di_stack_alloc * sizeof(*di_stack));
 }
 
 /**
@@ -48,7 +48,7 @@ uninit_parser(void)
     xfree(labbuf);
     xfree(codebuf);
     xfree(di_stack);
-    parser_state_tos = NULL;
+    parser_state_tos = nullptr;
 }
 
 extern void
@@ -88,10 +88,10 @@ reset_parser(void)
     parser_state_tos->want_blank               = false;
     parser_state_tos->in_stmt                  = false;
     parser_state_tos->ind_stmt                 = false;
-    parser_state_tos->procname                 = "\0";
-    parser_state_tos->procname_end             = "\0";
-    parser_state_tos->classname                = "\0";
-    parser_state_tos->classname_end            = "\0";
+    parser_state_tos->procname                 = (char *)"\0";
+    parser_state_tos->procname_end             = (char *)"\0";
+    parser_state_tos->classname                = (char *)"\0";
+    parser_state_tos->classname_end            = (char *)"\0";
     parser_state_tos->pcase                    = false;
     parser_state_tos->dec_nest                 = 0;
     parser_state_tos->can_break                = bb_none;
@@ -129,10 +129,9 @@ inc_pstack(void)
     if (++parser_state_tos->tos >= parser_state_tos->p_stack_size)
     {
         parser_state_tos->p_stack_size *= 2;
-        parser_state_tos->p_stack =
-            xrealloc(parser_state_tos->p_stack, parser_state_tos->p_stack_size * sizeof(codes_t));
-        parser_state_tos->il   = xrealloc(parser_state_tos->il, parser_state_tos->p_stack_size * sizeof(int));
-        parser_state_tos->cstk = xrealloc(parser_state_tos->cstk, parser_state_tos->p_stack_size * sizeof(int));
+        parser_state_tos->p_stack = (codes_t *)xrealloc(parser_state_tos->p_stack, parser_state_tos->p_stack_size * sizeof(codes_t));
+        parser_state_tos->il      = (int *)xrealloc(parser_state_tos->il, parser_state_tos->p_stack_size * sizeof(int));
+        parser_state_tos->cstk    = (int *)xrealloc(parser_state_tos->cstk, parser_state_tos->p_stack_size * sizeof(int));
     }
     parser_state_tos->cstk[parser_state_tos->tos] = parser_state_tos->cstk[parser_state_tos->tos - 1];
     return parser_state_tos->tos;
@@ -210,9 +209,9 @@ parse(codes_t tk)
         }
     }
 #endif
+    /* 'true' if we have an 'if' without an 'else'. */
     while ((parser_state_tos->p_stack[parser_state_tos->tos] == ifhead) && (tk != elselit))
     {
-        /* 'true' if we have an 'if' without an 'else'. */
         /* Apply the if(..) stmt ::= stmt reduction */
         parser_state_tos->p_stack[parser_state_tos->tos] = stmt;
         /* See if this allows any reduction. */
@@ -274,12 +273,11 @@ parse(codes_t tk)
             parser_state_tos->search_brace = settings.btype_2;
             break;
         }
-        case lbrace :  /* <-- scanned { */
+        case lbrace : /* <-- scanned { */
         {
             /* don't break comma in an initial list */
             break_comma = false;
-            if (parser_state_tos->p_stack[parser_state_tos->tos] == stmt ||
-                parser_state_tos->p_stack[parser_state_tos->tos] == stmtl)
+            if (parser_state_tos->p_stack[parser_state_tos->tos] == stmt || parser_state_tos->p_stack[parser_state_tos->tos] == stmtl)
             {
                 /* it is a random, isolated stmt group or a declaration */
                 parser_state_tos->i_l_follow += settings.ind_size;
@@ -509,7 +507,7 @@ reduce(void)
                     case dolit :
                     {
                         parser_state_tos->p_stack[--parser_state_tos->tos] = dohead;
-                        parser_state_tos->i_l_follow = parser_state_tos->il[parser_state_tos->tos];
+                        parser_state_tos->i_l_follow                       = parser_state_tos->il[parser_state_tos->tos];
                         break;
                     }
                     /* [if] [stmt] */
@@ -543,7 +541,7 @@ reduce(void)
                     case whilestmt :
                     {
                         parser_state_tos->p_stack[--parser_state_tos->tos] = stmt;
-                        parser_state_tos->i_l_follow = parser_state_tos->il[parser_state_tos->tos];
+                        parser_state_tos->i_l_follow                       = parser_state_tos->il[parser_state_tos->tos];
                         break;
                     }
                     /* [anything else] [stmt] */
@@ -581,7 +579,7 @@ reduce(void)
 /**
  * This kludge is called from main.  It is just like parse(semicolon) except that
  * it does not clear break_comma.  Leaving break_comma alone is necessary to make
- * sure that "int foo(), bar()" gets formatted correctly under -bc. 
+ * sure that "int foo(), bar()" gets formatted correctly under -bc.
  */
 extern void
 parse_lparen_in_decl(void)

@@ -1,0 +1,13 @@
+args.cc:61600
+indent.cc:32010
+comments.cc:28704
+parse.cc:24736
+lexi.cc:37574
+code_io.cc:9724
+globs.cc:2204
+handletoken.cc:61541
+gperf.cc:10730
+backup.cc:8193
+utils.cc:202
+output.cc:37663
+gperf-cc.cc:8469

@@ -249,10 +249,10 @@ search_brace(codes_t *type_code, bool *force_nl, bool *flushed_nl, bool *last_el
                  * I've just backed up the buffer pointer to point
                  * at `token'. --jla 9/95
                  */
-                parser_state_tos->procname      = "\0";
-                parser_state_tos->procname_end  = "\0";
-                parser_state_tos->classname     = "\0";
-                parser_state_tos->classname_end = "\0";
+                parser_state_tos->procname      = (char *)"\0";
+                parser_state_tos->procname_end  = (char *)"\0";
+                parser_state_tos->classname     = (char *)"\0";
+                parser_state_tos->classname_end = (char *)"\0";
                 /* Switch input buffers so that calls to lexi() will read from our save buffer. */
                 sw_buffer();
                 break;
@@ -371,7 +371,7 @@ indent_main_loop(bool *pbreak_line)
         }
         if (last_token_ends_sp > 0)
         {
-            last_token_ends_sp--;
+            last_token_ends_sp = false;
         }
         is_procname_definition =
             (((parser_state_tos->procname[0] != '\0') && parser_state_tos->in_parameter_declaration) ||
@@ -648,7 +648,7 @@ process_args(int argc, char *argv[], bool *using_stdin)
                     if (input_files > max_input_files)
                     {
                         max_input_files = 2 * max_input_files;
-                        in_file_names   = xrealloc(in_file_names, (max_input_files * sizeof(char *)));
+                        in_file_names   =(char **) xrealloc(in_file_names, (max_input_files * sizeof(char *)));
                     }
                 }
                 in_file_names[input_files - 1] = argv[i];
@@ -724,7 +724,7 @@ indent_single_file(bool using_stdin)
     if ((input_files == 0) || using_stdin)
     {
         input_files      = 1;
-        in_file_names[0] = "Standard input";
+        in_file_names[0] = (char *)"Standard input";
         in_name          = in_file_names[0];
         current_input    = read_stdin();
         is_stdin         = true;
@@ -816,20 +816,20 @@ main(int argc, char **argv)
      * 'size_t', 'wchar_t' and 'ptrdiff_t' are guarenteed to be available in 'ANSI C'.
      * These pointers will be freed in cleanup_user_specials().
      */
-    tmp = xmalloc(7);
+    tmp = (char *)xmalloc(7);
     memcpy(tmp, "size_t", 7);
     addkey(tmp, rw_decl);
-    tmp = xmalloc(8);
+    tmp = (char *)xmalloc(8);
     memcpy(tmp, "wchar_t", 8);
     addkey(tmp, rw_decl);
-    tmp = xmalloc(10);
+    tmp = (char *)xmalloc(10);
     memcpy(tmp, "ptrdiff_t", 10);
     addkey(tmp, rw_decl);
     init_parser();
     initialize_backups();
     exit_status   = total_success;
     input_files   = 0;
-    in_file_names = xmalloc(max_input_files * sizeof(char *));
+    in_file_names = (char **)xmalloc(max_input_files * sizeof(char *));
     set_defaults();
     profile_pathname = handle_profile(argc, argv);
     exit_status      = process_args(argc, argv, &using_stdin);

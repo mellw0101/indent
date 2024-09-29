@@ -1,3 +1,4 @@
+#include <sys/cdefs.h>
 #include "../include/prototypes.h"
 
 static FILE           *output         = NULL;
@@ -75,8 +76,7 @@ better_break(buf_break_st_t *b1, const buf_break_st_t *b2)
                 }
             }
             if (settings.lineup_to_parens && (b1->level > (first_level + 1)) &&
-                !(only_parens_till_b2 && (b1->target_col <= (b2->col + (1 + 2 * b1->level)))) &&
-                (b1->level > b2->level))
+                !(only_parens_till_b2 && (b1->target_col <= (b2->col + (1 + 2 * b1->level)))) && (b1->level > b2->level))
             {
                 is_better = false;
             }
@@ -186,8 +186,8 @@ set_priority(buf_break_st_t *bb)
 void
 set_buf_break(bb_code_t code, int paren_targ)
 {
-    int              target_col, level;
-    int              code_target = compute_code_target(paren_targ);
+    int             target_col, level;
+    int             code_target = compute_code_target(paren_targ);
     buf_break_st_t *bb;
 
     /* First, calculate the column that code following e_code would be
@@ -250,7 +250,7 @@ set_buf_break(bb_code_t code, int paren_targ)
 
     /* Store the position of `e_code' as the place to break this line. */
 
-    bb                 = xmalloc(sizeof(buf_break_st_t));
+    bb                 = (buf_break_st_t *)xmalloc(sizeof(buf_break_st_t));
     bb->offset         = e_code - s_code;
     bb->level          = level;
     bb->target_col     = target_col;
@@ -277,15 +277,13 @@ set_buf_break(bb_code_t code, int paren_targ)
                 bb->priority_code = bb_after_boolean_binary_op;
             }
             else if ((e_code - s_code >= 2) && (e_code[-1] == '=') &&
-                     ((e_code[-2] == ' ') ||
-                      ((e_code - s_code >= 3) && (e_code[-3] == ' ') &&
-                       ((e_code[-2] == '%') || (e_code[-2] == '^') || (e_code[-2] == '&') || (e_code[-2] == '*') ||
-                        (e_code[-2] == '-') || (e_code[-2] == '+') || (e_code[-2] == '|')))))
+                     ((e_code[-2] == ' ') || ((e_code - s_code >= 3) && (e_code[-3] == ' ') &&
+                                              ((e_code[-2] == '%') || (e_code[-2] == '^') || (e_code[-2] == '&') || (e_code[-2] == '*') ||
+                                               (e_code[-2] == '-') || (e_code[-2] == '+') || (e_code[-2] == '|')))))
             {
                 bb->priority_code = bb_after_equal_sign;
             }
-            else if ((((e_code - s_code) >= 2) && (e_code[-2] == ' ') &&
-                      ((e_code[-1] == '<') || (e_code[-1] == '>'))) ||
+            else if ((((e_code - s_code) >= 2) && (e_code[-2] == ' ') && ((e_code[-1] == '<') || (e_code[-1] == '>'))) ||
                      (((e_code - s_code) >= 3) && (e_code[-3] == ' ') && (e_code[-1] == '=') &&
                       ((e_code[-2] == '=') || (e_code[-2] == '!') || (e_code[-2] == '<') || (e_code[-2] == '>'))))
             {
@@ -351,7 +349,7 @@ set_buf_break(bb_code_t code, int paren_targ)
             for (bb = bb->prev; bb;)
             {
                 buf_break_st_t *obb = bb;
-                bb = bb->prev;
+                bb                  = bb->prev;
                 xfree(obb);
             }
             buf_break->prev = NULL;
@@ -370,7 +368,7 @@ clear_buf_break_list(bool *pbreak_line)
     for (bb = buf_break_list; bb;)
     {
         buf_break_st_t *obb = bb;
-        bb = bb->prev;
+        bb                  = bb->prev;
         xfree(obb);
     }
     buf_break = buf_break_list = NULL;
@@ -444,7 +442,7 @@ set_next_buf_break(int prev_code_target, int new_code_target, int offset, bool *
                 for (bb = bb->prev; bb;)
                 {
                     buf_break_st_t *obb = bb;
-                    bb = bb->prev;
+                    bb                  = bb->prev;
                     xfree(obb);
                 }
                 bb              = buf_break;
@@ -487,8 +485,7 @@ pad_output(int cur_col, int target_column)
                  * to indent to the same level as the parent
                  * statement.
                  */
-                if (parser_state_tos->last_rw == rw_sp_paren && parser_state_tos->p_stack[tos] == stmt && *s_code &&
-                    tos > 0)
+                if (parser_state_tos->last_rw == rw_sp_paren && parser_state_tos->p_stack[tos] == stmt && *s_code && tos > 0)
                 {
                     do
                     {
@@ -713,7 +710,7 @@ count_parens(const char *string)
 static void
 dump_line_code(int *pcur_col, int *pnot_truncated, int paren_targ, bool *pbreak_line, int target_col_break)
 {
-    int paren_level = 0;
+    __attribute__((__unused__)) int paren_level = 0;
     /* print code section, if any */
     if (s_code != e_code)
     {
@@ -859,16 +856,14 @@ dump_line(int force_nl, int *paren_targ, bool *pbreak_line)
     {
         parser_state_tos->broken_at_non_nl = false;
     }
-    if (parser_state_tos->procname[0] && !parser_state_tos->classname[0] &&
-        (s_code_corresponds_to == parser_state_tos->procname))
+    if (parser_state_tos->procname[0] && !parser_state_tos->classname[0] && (s_code_corresponds_to == parser_state_tos->procname))
     {
-        parser_state_tos->procname = "\0";
+        parser_state_tos->procname = (char *)"\0";
     }
-    else if (parser_state_tos->procname[0] && parser_state_tos->classname[0] &&
-             (s_code_corresponds_to == parser_state_tos->classname))
+    else if (parser_state_tos->procname[0] && parser_state_tos->classname[0] && (s_code_corresponds_to == parser_state_tos->classname))
     {
-        parser_state_tos->procname  = "\0";
-        parser_state_tos->classname = "\0";
+        parser_state_tos->procname  = (char *)"\0";
+        parser_state_tos->classname = (char *)"\0";
     }
     /* A blank line */
     if ((s_code == e_code) && (s_lab == e_lab) && (s_com == e_com))
@@ -975,7 +970,7 @@ dump_line(int force_nl, int *paren_targ, bool *pbreak_line)
     parser_state_tos->decl_on_line = parser_state_tos->in_decl;
     /* next line should be indented if we have not completed this stmt */
     parser_state_tos->ind_stmt = parser_state_tos->in_stmt;
-    e_lab  = s_lab;
+    e_lab                      = s_lab;
     /* reset buffers */
     *s_lab = '\0';
     if (not_truncated)
@@ -984,8 +979,8 @@ dump_line(int force_nl, int *paren_targ, bool *pbreak_line)
         *s_code               = '\0';
         s_code_corresponds_to = NULL;
     }
-    e_com = s_com;
-    *s_com = '\0';
+    e_com                         = s_com;
+    *s_com                        = '\0';
     parser_state_tos->ind_level   = parser_state_tos->i_l_follow;
     parser_state_tos->paren_level = parser_state_tos->p_l_follow;
     if (parser_state_tos->paren_level > 0)
@@ -1155,7 +1150,6 @@ reopen_output_trunc(const char *filename)
     output = freopen(filename, "w", output);
 }
 
-
 /* Opens the output file in read/write mode. */
 void
 open_output(const char *filename, const char *mode)
@@ -1221,8 +1215,7 @@ compute_code_target(int paren_targ)
 
     if (!settings.lineup_to_parens)
     {
-        return target_col + settings.continuation_indent +
-               (settings.paren_indent * (parser_state_tos->paren_level - 1));
+        return target_col + settings.continuation_indent + (settings.paren_indent * (parser_state_tos->paren_level - 1));
     }
 
     return paren_targ;

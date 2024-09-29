@@ -8,7 +8,7 @@ need_chars(buf_t *bp, size_t needed)
     if (current_size + needed >= (size_t)bp->size)
     {
         bp->size = ROUND_UP(current_size + needed, 1024);
-        bp->ptr  = xrealloc(bp->ptr, bp->size);
+        bp->ptr  = (char *)xrealloc(bp->ptr, bp->size);
         if (bp->ptr == NULL)
         {
             fatal("Ran out of memory", 0);
@@ -23,7 +23,7 @@ check_code_size(void)
     if (e_code >= l_code)
     {
         int nsize = l_code - s_code + 400;
-        codebuf   = xrealloc(codebuf, nsize);
+        codebuf   =(char *) xrealloc(codebuf, nsize);
         e_code    = codebuf + (e_code - s_code) + 1;
         l_code    = codebuf + nsize - 5;
         s_code    = codebuf + 1;
@@ -36,7 +36,7 @@ check_lab_size(void)
     if (e_lab >= l_lab)
     {
         int nsize = l_lab - s_lab + 400;
-        labbuf    = xrealloc(labbuf, nsize);
+        labbuf    = (char *)xrealloc(labbuf, nsize);
         e_lab     = labbuf + (e_lab - s_lab) + 1;
         l_lab     = labbuf + nsize - 5;
         s_lab     = labbuf + 1;
@@ -199,7 +199,7 @@ handle_token_lparen(bool *force_nl, bool *sp_sw, int *dec_ind, bool *pbreak_line
     {
         parser_state_tos->paren_indents_size *= 2;
         parser_state_tos->paren_indents =
-            xrealloc(parser_state_tos->paren_indents, parser_state_tos->paren_indents_size * sizeof(short));
+            (short *)xrealloc(parser_state_tos->paren_indents, parser_state_tos->paren_indents_size * sizeof(short));
     }
     parser_state_tos->paren_depth++;
     /**
@@ -854,7 +854,7 @@ handle_token_lbrace(bool *force_nl, int *dec_ind, exit_values_t *file_exit_value
         if (parser_state_tos->dec_nest >= di_stack_alloc)
         {
             di_stack_alloc *= 2;
-            di_stack = xrealloc(di_stack, di_stack_alloc * sizeof(*di_stack));
+            di_stack = (int *)xrealloc(di_stack, di_stack_alloc * sizeof(*di_stack));
         }
         di_stack[parser_state_tos->dec_nest++] = *dec_ind;
     }
@@ -897,7 +897,7 @@ handle_token_lbrace(bool *force_nl, int *dec_ind, exit_values_t *file_exit_value
         {
             parser_state_tos->paren_indents_size *= 2;
             parser_state_tos->paren_indents =
-                xrealloc(parser_state_tos->paren_indents, parser_state_tos->paren_indents_size * sizeof(short));
+               (short *) xrealloc(parser_state_tos->paren_indents, parser_state_tos->paren_indents_size * sizeof(short));
         }
         ++parser_state_tos->paren_depth;
         parser_state_tos->paren_indents[parser_state_tos->p_l_follow - 1] = e_code - s_code;
@@ -1492,21 +1492,21 @@ handle_token_preesc(exit_values_t *file_exit_value, bool *pbreak_line)
              * manipulations will use the copy at the top of stack, and
              * then we can return to the previous state by popping the stack.
              */
-            parser_state_t *new;
-            new = xmalloc(sizeof(parser_state_t));
-            memcpy(new, parser_state_tos, sizeof(parser_state_t));
+            parser_state_t *new_s;
+            new_s = (parser_state_t *)xmalloc(sizeof(parser_state_t));
+            memcpy(new_s, parser_state_tos, sizeof(parser_state_t));
             /* We need to copy the dynamically allocated arrays in the struct parser_state too.  */
-            new->p_stack = xmalloc(parser_state_tos->p_stack_size * sizeof(codes_t));
-            memcpy(new->p_stack, parser_state_tos->p_stack, (parser_state_tos->p_stack_size * sizeof(codes_t)));
-            new->il = xmalloc(parser_state_tos->p_stack_size * sizeof(int));
-            memcpy(new->il, parser_state_tos->il, parser_state_tos->p_stack_size * sizeof(int));
-            new->cstk = xmalloc(parser_state_tos->p_stack_size * sizeof(int));
-            memcpy(new->cstk, parser_state_tos->cstk, parser_state_tos->p_stack_size * sizeof(int));
-            new->paren_indents = xmalloc(parser_state_tos->paren_indents_size * sizeof(short));
-            memcpy(new->paren_indents, parser_state_tos->paren_indents,
+            new_s->p_stack = (codes_t *)xmalloc(parser_state_tos->p_stack_size * sizeof(codes_t));
+            memcpy(new_s->p_stack, parser_state_tos->p_stack, (parser_state_tos->p_stack_size * sizeof(codes_t)));
+            new_s->il = (int *)xmalloc(parser_state_tos->p_stack_size * sizeof(int));
+            memcpy(new_s->il, parser_state_tos->il, parser_state_tos->p_stack_size * sizeof(int));
+            new_s->cstk = (int *)xmalloc(parser_state_tos->p_stack_size * sizeof(int));
+            memcpy(new_s->cstk, parser_state_tos->cstk, parser_state_tos->p_stack_size * sizeof(int));
+            new_s->paren_indents = (short *)xmalloc(parser_state_tos->paren_indents_size * sizeof(short));
+            memcpy(new_s->paren_indents, parser_state_tos->paren_indents,
                    (parser_state_tos->paren_indents_size * sizeof(short)));
-            new->next        = parser_state_tos;
-            parser_state_tos = new;
+            new_s->next        = parser_state_tos;
+            parser_state_tos = new_s;
             /* GDB_HOOK_parser_state_tos. */
         }
     }
@@ -1552,7 +1552,7 @@ handle_token_preesc(exit_values_t *file_exit_value, bool *pbreak_line)
         }
         else
         {
-            ERROR(else_or_endif ? "Unmatched #else" : "Unmatched #elif", 0, 0);
+            ERROR((else_or_endif ? "Unmatched #else" : "Unmatched #elif"), NULL, NULL);
             *file_exit_value = indent_error;
         }
     }

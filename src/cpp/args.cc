@@ -850,7 +850,7 @@ set_option(const char *option, const char *param, int expl, const char *option_s
                         }
                     }
                     param_len = strlen(param_start);
-                    tmp       = xmalloc(param_len + 1);
+                    tmp       = (char *)xmalloc(param_len + 1);
                     memcpy(tmp, param_start, param_len);
                     tmp[param_len] = '\0';
                     addkey(tmp, rw_decl);
@@ -1127,7 +1127,7 @@ set_profile(void)
             int len = strlen(INDENT_PROFILE) + 3;
             scan_profile(f, INDENT_PROFILE);
             (void)fclose(f);
-            fname = xmalloc(len);
+            fname = (char *)xmalloc(len);
             strcpy(fname, "./");
             (void)strcat(fname, INDENT_PROFILE);
         }
@@ -1136,7 +1136,7 @@ set_profile(void)
             homedir = getenv("HOME");
             if (homedir)
             {
-                fname = xmalloc(strlen(homedir) + strlen(PROFILE_FORMAT) + sizeof(prof));
+                fname = (char *)xmalloc(strlen(homedir) + strlen(PROFILE_FORMAT) + sizeof(prof));
                 sprintf(fname, PROFILE_FORMAT, homedir, prof);
                 if ((f = fopen(fname, "r")) != NULL)
                 {

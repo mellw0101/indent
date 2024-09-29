@@ -1,14 +1,14 @@
 #include "../include/prototypes.h"
 
 /** Check the limits of the comment buffer, and expand as neccessary. */
-#define CHECK_COM_SIZE(X)                            \
-    if (e_com >= l_com - (X))                        \
-    {                                                \
-        size_t nsize = l_com - s_com + 400 + (X);    \
-        combuf       = xrealloc(combuf, nsize);      \
-        e_com        = combuf + (e_com - s_com) + 1; \
-        l_com        = combuf + nsize - 5;           \
-        s_com        = combuf + 1;                   \
+#define CHECK_COM_SIZE(X)                               \
+    if (e_com >= l_com - (X))                           \
+    {                                                   \
+        size_t nsize = l_com - s_com + 400 + (X);       \
+        combuf       = (char *)xrealloc(combuf, nsize); \
+        e_com        = combuf + (e_com - s_com) + 1;    \
+        l_com        = combuf + nsize - 5;              \
+        s_com        = combuf + 1;                      \
     }
 
 /**
@@ -58,28 +58,28 @@
 extern void
 print_comment(int *paren_targ, bool *pbreak_line)
 {
-    int      column;
-    int      format;
-    codes_t  comment_type;
-    int      start_column;
-    int      found_column;
-    int      first_comment_line;
-    int      right_margin;
-    int      boxed_comment;
-    int      stars;
-    int      blankline_delims;
-    int      paragraph_break;
-    int      merge_blank_comment_lines;
-    int      two_contiguous_comments = 0;
-    int      save_length             = 0;
-    char    *save_ptr                = NULL;
-    char    *text_on_line            = NULL;
-    char    *line_break_ptr          = NULL;
-    char    *start_delim             = NULL;
-    char    *line_preamble           = NULL;
-    int      line_preamble_length;
-    int      visible_preamble;
-    int      suppress_cdb = 0;
+    int     column;
+    int     format;
+    codes_t comment_type;
+    int     start_column;
+    int     found_column;
+    int     first_comment_line;
+    int     right_margin;
+    int     boxed_comment;
+    int     stars;
+    int     blankline_delims;
+    int     paragraph_break;
+    int     merge_blank_comment_lines;
+    int     two_contiguous_comments = 0;
+    int     save_length             = 0;
+    char   *save_ptr                = NULL;
+    char   *text_on_line            = NULL;
+    char   *line_break_ptr          = NULL;
+    char   *start_delim             = NULL;
+    char   *line_preamble           = NULL;
+    int     line_preamble_length;
+    int     visible_preamble;
+    int     suppress_cdb = 0;
     /* GDB_HOOK_print_comment(). */
     /* Increment the parser stack, as we will store some things
      * there for dump_line to use. */
@@ -102,8 +102,8 @@ print_comment(int *paren_targ, bool *pbreak_line)
      */
     if (comment_type == cplus_comment)
     {
-        start_delim          = "//";
-        line_preamble        = "// ";
+        start_delim          = (char *)"//";
+        line_preamble        = (char *)"// ";
         line_preamble_length = strlen(line_preamble);
         visible_preamble     = 1;
         boxed_comment        = 0;
@@ -221,7 +221,7 @@ print_comment(int *paren_targ, bool *pbreak_line)
     }
     else
     {
-        start_delim          = "/*";
+        start_delim          = (char *)"/*";
         line_preamble        = 0;
         line_preamble_length = 0;
         visible_preamble     = 0;
@@ -328,12 +328,12 @@ print_comment(int *paren_targ, bool *pbreak_line)
 
         if (stars)
         {
-            line_preamble    = " * ";
+            line_preamble    = (char *)" * ";
             visible_preamble = 1;
         }
         else
         {
-            line_preamble    = "   ";
+            line_preamble    = (char *)"   ";
             visible_preamble = 0;
         }
     }
@@ -442,8 +442,7 @@ print_comment(int *paren_targ, bool *pbreak_line)
                         /* Convert the tab to the appropriate number of spaces,
                            based on the column we found the comment in, not
                            the one we're printing in. */
-                        int tab_width =
-                            (settings.tabsize - ((column + found_column - start_column - 1) % settings.tabsize));
+                        int tab_width = (settings.tabsize - ((column + found_column - start_column - 1) % settings.tabsize));
                         column += tab_width;
                         CHECK_COM_SIZE(tab_width);
                         while (tab_width--)
@@ -500,8 +499,7 @@ print_comment(int *paren_targ, bool *pbreak_line)
                         }
 
                         /* Also need to eat the preamble. */
-                        if (!boxed_comment && (current_column() == found_column + 1) && (buf_ptr[0] == '*') &&
-                            (buf_ptr[1] != '/'))
+                        if (!boxed_comment && (current_column() == found_column + 1) && (buf_ptr[0] == '*') && (buf_ptr[1] != '/'))
                         {
                             if (++buf_ptr >= buf_end)
                             {
@@ -618,7 +616,7 @@ print_comment(int *paren_targ, bool *pbreak_line)
                         {
                             /* Account for change in line_preamble_length: */
                             column -= line_preamble_length - 1;
-                            line_preamble        = " ";
+                            line_preamble        = (char *)" ";
                             line_preamble_length = 1;
                             boxed_comment        = 1;
                             format               = 0;

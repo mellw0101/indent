@@ -147,12 +147,12 @@ read_file(char *filename, struct stat *file_stats)
     if (fileptr.data != 0)
     {
         /* Add 1 for '\0' and 1 for potential final added newline. */
-        fileptr.data = xrealloc(fileptr.data, (unsigned)file_stats->st_size + 2);
+        fileptr.data = (char *)xrealloc(fileptr.data, (unsigned)file_stats->st_size + 2);
     }
     else
     {
         /* Add 1 for '\0' and 1 for potential final added newline. */
-        fileptr.data = xmalloc((unsigned)file_stats->st_size + 2);
+        fileptr.data = (char *)xmalloc((unsigned)file_stats->st_size + 2);
     }
     size_to_read = fileptr.size;
     while (size_to_read > 0)
@@ -191,11 +191,11 @@ read_file(char *filename, struct stat *file_stats)
     }
     if (fileptr.name != NULL)
     {
-        fileptr.name = xrealloc(fileptr.name, (unsigned)namelen + 1);
+        fileptr.name = (char *)xrealloc(fileptr.name, (unsigned)namelen + 1);
     }
     else
     {
-        fileptr.name = xmalloc(namelen + 1);
+        fileptr.name = (char *)xmalloc(namelen + 1);
     }
     memcpy(fileptr.name, filename, namelen);
     fileptr.name[namelen] = EOS;
@@ -227,7 +227,7 @@ read_stdin(void)
     {
         free(stdinptr.data);
     }
-    stdinptr.data = xmalloc(size + 1);
+    stdinptr.data = (char *)xmalloc(size + 1);
     stdinptr.size = 0;
     p             = stdinptr.data;
     do
@@ -245,12 +245,12 @@ read_stdin(void)
         if (ch != EOF)
         {
             size += (2 * BUFSIZ);
-            stdinptr.data = xrealloc(stdinptr.data, (unsigned)size);
+            stdinptr.data = (char *)xrealloc(stdinptr.data, (unsigned)size);
             p             = stdinptr.data + stdinptr.size;
         }
     }
     while (ch != EOF);
-    stdinptr.name                = "Standard Input";
+    stdinptr.name                = (char *)"Standard Input";
     stdinptr.data[stdinptr.size] = EOS;
     return &stdinptr;
 }

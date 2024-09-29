@@ -136,7 +136,7 @@
 /* Define to the home page for this package. */
 #define PACKAGE_URL "https://www.gnu.org/software/indent/"
 
-// #define DEBUG 1
+#define DEBUG 1
 
 /* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for

@@ -1,8 +1,8 @@
+#include "../include/prototypes.h"
+
 /* ANSI-C code produced by gperf version 3.1 */
 /* Command-line: gperf -D -c -l -p -t -T -g -j1 -o -K rwd -L ANSI-C -N is_reserved_cc -H hash_cc indent-cc.gperf  */
 /* Computed positions: -k'1,3' */
-
-#include "../include/lexi.h"
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) && ('%' == 37) && ('&' == 38) && ('\'' == 39) &&       \
       ('(' == 40) && (')' == 41) && ('*' == 42) && ('+' == 43) && (',' == 44) && ('-' == 45) && ('.' == 46) &&        \
@@ -52,7 +52,6 @@ inline
         58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58,
         58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58, 58};
     register unsigned int hval = len;
-
     switch (hval)
     {
         default :
@@ -66,224 +65,125 @@ inline
     return hval;
 }
 
-templ_ty *
+templ_t *
 is_reserved_cc(register const char *str, register size_t len)
 {
     static unsigned char lengthtable[] = {2, 3, 5, 6, 4, 6, 6, 6, 5, 6, 8, 5, 9, 4, 6, 5, 6, 4, 6, 5, 4, 5, 2, 7,
                                           8, 3, 4, 6, 5, 6, 8, 6, 4, 5, 4, 6, 7, 5, 7, 4, 8, 6, 8, 5, 6, 6, 3, 7};
-    static templ_ty      wordlist[]    = {
+    /* clang-format off */
+    static templ_t      wordlist[]    = {
 #line 29 "indent-cc.gperf"
-        {
-                                  "if",    rw_sp_paren,
-                                  },
+        {"if",    rw_sp_paren,},
 #line 10 "indent-cc.gperf"
-        {
-                                  "int",        rw_decl,
-                                  },
+        {"int",        rw_decl,},
 #line 39 "indent-cc.gperf"
-        {
-                                  "throw",      rw_return,
-                                  },
+        {"throw",      rw_return,},
 #line 28 "indent-cc.gperf"
-        {
-                                  "return",      rw_return,
-                                  },
+        {"return",      rw_return,},
 #line 27 "indent-cc.gperf"
-        {
-                                  "goto",       rw_break,
-                                  },
+        {"goto",       rw_break,},
 #line 3 "indent-cc.gperf"
-        {
-                                  "switch",      rw_switch,
-                                  },
+        {"switch",      rw_switch,},
 #line 6 "indent-cc.gperf"
-        {
-                                  "struct", rw_struct_like,
-                                  },
+        {"struct", rw_struct_like,},
 #line 41 "indent-cc.gperf"
-        {
-                                  "inline",        rw_decl,
-                                  },
+        {"inline",        rw_decl,},
 #line 48 "indent-cc.gperf"
-        {
-                                  "sigof",      rw_sizeof,
-                                  },
+        {"sigof",      rw_sizeof,},
 #line 19 "indent-cc.gperf"
-        {
-                                  "signed",        rw_decl,
-                                  },
+        {"signed",        rw_decl,},
 #line 20 "indent-cc.gperf"
-        {
-                                  "register",        rw_decl,
-                                  },
+        {"register",        rw_decl,},
 #line 35 "indent-cc.gperf"
-        {
-                                  "catch",    rw_sp_paren,
-                                  },
+        {"catch",    rw_sp_paren,},
 #line 44 "indent-cc.gperf"
-        {
-                                  "signature", rw_struct_like,
-                                  },
+        {"signature", rw_struct_like,},
 #line 4 "indent-cc.gperf"
-        {
-                                  "case",        rw_case,
-                                  },
+        {"case",        rw_case,},
 #line 21 "indent-cc.gperf"
-        {
-                                  "static",        rw_decl,
-                                  },
+        {"static",        rw_decl,},
 #line 16 "indent-cc.gperf"
-        {
-                                  "short",        rw_decl,
-                                  },
+        {"short",        rw_decl,},
 #line 23 "indent-cc.gperf"
-        {
-                                  "extern",        rw_decl,
-                                  },
+        {"extern",        rw_decl,},
 #line 32 "indent-cc.gperf"
-        {
-                                  "else",     rw_sp_else,
-                                  },
+        {"else",     rw_sp_else,},
 #line 22 "indent-cc.gperf"
-        {
-                                  "global",        rw_decl,
-                                  },
+        {"global",        rw_decl,},
 #line 7 "indent-cc.gperf"
-        {
-                                  "union", rw_struct_like,
-                                  },
+        {"union", rw_struct_like,},
 #line 11 "indent-cc.gperf"
-        {
-                                  "char",        rw_decl,
-                                  },
+        {"char",        rw_decl,},
 #line 36 "indent-cc.gperf"
-        {
-                                  "class", rw_struct_like,
-                                  },
+        {"class", rw_struct_like,},
 #line 33 "indent-cc.gperf"
-        {
-                                  "do",   rw_sp_nparen,
-                                  },
+        {"do",   rw_sp_nparen,},
 #line 46 "indent-cc.gperf"
-        {
-                                  "classof",      rw_sizeof,
-                                  },
+        {"classof",      rw_sizeof,},
 #line 18 "indent-cc.gperf"
-        {
-                                  "unsigned",        rw_decl,
-                                  },
+        {"unsigned",        rw_decl,},
 #line 31 "indent-cc.gperf"
-        {
-                                  "for",    rw_sp_paren,
-                                  },
+        {"for",    rw_sp_paren,},
 #line 15 "indent-cc.gperf"
-        {
-                                  "long",        rw_decl,
-                                  },
+        {"long",        rw_decl,},
 #line 40 "indent-cc.gperf"
-        {
-                                  "friend",        rw_decl,
-                                  },
+        {"friend",        rw_decl,},
 #line 30 "indent-cc.gperf"
-        {
-                                  "while",    rw_sp_paren,
-                                  },
+        {"while",    rw_sp_paren,},
 #line 34 "indent-cc.gperf"
-        {
-                                  "sizeof",      rw_sizeof,
-                                  },
+        {"sizeof",      rw_sizeof,},
 #line 50 "indent-cc.gperf"
-        {
-                                  "operator",    rw_operator,
-                                  },
+        {"operator",    rw_operator,},
 #line 37 "indent-cc.gperf"
-        {
-                                  "delete",      rw_return,
-                                  },
+        {"delete",      rw_return,},
 #line 8 "indent-cc.gperf"
-        {
-                                  "enum",        rw_enum,
-                                  },
+        {"enum",        rw_enum,},
 #line 12 "indent-cc.gperf"
-        {
-                                  "const",        rw_decl,
-                                  },
+        {"const",        rw_decl,},
 #line 24 "indent-cc.gperf"
-        {
-                                  "void",        rw_decl,
-                                  },
+        {"void",        rw_decl,},
 #line 45 "indent-cc.gperf"
-        {
-                                  "typeof",      rw_sizeof,
-                                  },
+        {"typeof",      rw_sizeof,},
 #line 17 "indent-cc.gperf"
-        {
-                                  "typedef",        rw_decl,
-                                  },
+        {"typedef",        rw_decl,},
 #line 13 "indent-cc.gperf"
-        {
-                                  "float",        rw_decl,
-                                  },
+        {"float",        rw_decl,},
 #line 43 "indent-cc.gperf"
-        {
-                                  "virtual",        rw_decl,
-                                  },
+        {"virtual",        rw_decl,},
 #line 49 "indent-cc.gperf"
-        {
-                                  "bool",        rw_decl,
-                                  },
+        {"bool",        rw_decl,},
 #line 42 "indent-cc.gperf"
-        {
-                                  "template",        rw_decl,
-                                  },
+        {"template",        rw_decl,},
 #line 47 "indent-cc.gperf"
-        {
-                                  "headof",      rw_sizeof,
-                                  },
+        {"headof",      rw_sizeof,},
 #line 25 "indent-cc.gperf"
-        {
-                                  "volatile",        rw_decl,
-                                  },
+        {"volatile",        rw_decl,},
 #line 5 "indent-cc.gperf"
-        {
-                                  "break",       rw_break,
-                                  },
+        {"break",       rw_break,},
 #line 14 "indent-cc.gperf"
-        {
-                                  "double",        rw_decl,
-                                  },
+        {"double",        rw_decl,},
 #line 26 "indent-cc.gperf"
-        {
-                                  "va_dcl",        rw_decl,
-                                  },
+        {"va_dcl",        rw_decl,},
 #line 38 "indent-cc.gperf"
-        {
-                                  "new",      rw_return,
-                                  },
+        {"new",      rw_return,},
 #line 9 "indent-cc.gperf"
-        {
-                                  "default",        rw_case,
-                                  }
+        {"default",        rw_case,}
     };
-
+    /* clang-format on */
     static signed char lookup[] = {-1, -1, -1, 0,  1,  -1, -1, 2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14,
                                    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
                                    35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, -1, 46, -1, -1, -1, -1, 47};
-
     if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
         register unsigned int key = hash_cc(str, len);
-
         if (key <= MAX_HASH_VALUE)
         {
             register int idx = lookup[key];
-
             if (idx >= 0)
             {
                 if (len == lengthtable[idx])
                 {
                     register const char *s = wordlist[idx].rwd;
-
                     if (*str == *s && !memcmp(str + 1, s + 1, len - 1))
                     {
                         return &wordlist[idx];

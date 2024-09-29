@@ -1,8 +1,8 @@
+#include "../include/prototypes.h"
+
 /* ANSI-C code produced by gperf version 3.1 */
 /* Command-line: gperf -D -c -l -p -t -T -g -j1 -o -K rwd -L ANSI-C -N is_reserved indent.gperf  */
 /* Computed positions: -k'1,$' */
-
-#include "../include/lexi.h"
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) && ('%' == 37) && ('&' == 38) && ('\'' == 39) &&       \
       ('(' == 40) && (')' == 41) && ('*' == 42) && ('+' == 43) && (',' == 44) && ('-' == 45) && ('.' == 46) &&        \
@@ -54,12 +54,12 @@ inline
     return len + asso_values[(unsigned char)str[len - 1]] + asso_values[(unsigned char)str[0]];
 }
 
-templ_ty *
+templ_t *
 is_reserved(register const char *str, register size_t len)
 {
     static unsigned char lengthtable[] = {3, 2, 5, 6, 5, 6, 7, 3, 5, 6, 8, 7, 4, 7, 6, 8, 4, 8, 6, 4, 6, 7, 8,
                                           8, 6, 8, 4, 9, 7, 6, 9, 5, 4, 5, 6, 2, 5, 4, 4, 4, 5, 8, 6, 8, 10};
-    static templ_ty      wordlist[]    = {
+    static templ_t      wordlist[]    = {
 #line 10 "indent.gperf"
         {
                                "int",        rw_decl,

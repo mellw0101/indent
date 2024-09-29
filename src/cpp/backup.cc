@@ -1,6 +1,5 @@
 #include "../include/prototypes.h"
 
-
 #ifndef NODIR
 #    if defined(_POSIX_VERSION) /* Might be defined in unistd.h.  */
 /* POSIX does not require that the d_ino field be present, and some
@@ -28,13 +27,13 @@
 /**
  * Default backup file suffix to use
  */
-static char *simple_backup_suffix = BACKUP_SUFFIX_STR;
+static char *simple_backup_suffix = (char *)BACKUP_SUFFIX_STR;
 
 /**
  * What kinds of backup files to make -- see table `version_control_values' below.
  */
 backup_mode_t version_control = unknown;
-int            version_width   = 1;
+int           version_width   = 1;
 
 /**
  * Construct a simple backup name for PATHNAME by appending
@@ -44,7 +43,7 @@ static char *
 simple_backup_name(char *pathname)
 {
     char *backup_name;
-    backup_name = xmalloc(strlen(pathname) + strlen(simple_backup_suffix) + 2);
+    backup_name = (char *)xmalloc(strlen(pathname) + strlen(simple_backup_suffix) + 2);
     sprintf(backup_name, "%s%s", pathname, simple_backup_suffix);
     return backup_name;
 }
@@ -124,7 +123,7 @@ max_version(char *pathname)
         int   dirlen = p - pathname;
         char *dirname;
         filename = p + 1;
-        dirname  = xmalloc(dirlen + 1);
+        dirname  = (char *)xmalloc(dirlen + 1);
         strncpy(dirname, pathname, (dirlen));
         dirname[dirlen] = '\0';
         version         = highest_version(filename, dirname);
@@ -133,7 +132,7 @@ max_version(char *pathname)
     else
     {
         filename = pathname;
-        version  = highest_version(filename, ".");
+        version  = highest_version(filename, (char *)".");
     }
     return version;
 }
@@ -163,7 +162,7 @@ generate_backup_filename(backup_mode_t versionControl, char *pathname)
         else
         {
             last_numbered_version++;
-            backup_name = xmalloc(strlen(pathname) + 16);
+            backup_name = (char *)xmalloc(strlen(pathname) + 16);
             if (backup_name)
             {
                 sprintf(backup_name, BACKUP_SUFFIX_FORMAT, pathname, version_width, (int)last_numbered_version);
@@ -172,17 +171,17 @@ generate_backup_filename(backup_mode_t versionControl, char *pathname)
     }
     return backup_name;
 }
-#endif                               /* !NODIR */
+#endif                                       /* !NODIR */
 
 static version_control_values_t values[] = {
-    {             none,    "never"}, /* Don't make backups.            */
-    {             none,     "none"}, /* Ditto                          */
-    {           simple,   "simple"}, /* Only simple backups            */
-    {numbered_existing, "existing"}, /* Numbered if they already exist */
-    {numbered_existing,      "nil"}, /* Ditto                          */
-    {         numbered, "numbered"}, /* Numbered backups               */
-    {         numbered,        "t"}, /* Ditto                          */
-    {          unknown,          0}  /* Initial, undefined value.      */
+    {             none,    (char *)"never"}, /* Don't make backups.            */
+    {             none,     (char *)"none"}, /* Ditto                          */
+    {           simple,   (char *)"simple"}, /* Only simple backups            */
+    {numbered_existing, (char *)"existing"}, /* Numbered if they already exist */
+    {numbered_existing,      (char *)"nil"}, /* Ditto                          */
+    {         numbered, (char *)"numbered"}, /* Numbered backups               */
+    {         numbered,        (char *)"t"}, /* Ditto                          */
+    {          unknown,                  0}  /* Initial, undefined value.      */
 };
 
 /**
@@ -192,7 +191,7 @@ static version_control_values_t values[] = {
 backup_mode_t
 version_control_value(void)
 {
-    char                      *version = getenv("VERSION_CONTROL");
+    char                     *version = getenv("VERSION_CONTROL");
     version_control_values_t *v;
     backup_mode_t             ret = unknown;
     if ((version == NULL) || (*version == 0))
